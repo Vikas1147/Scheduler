@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+
+metadata:
+  name: scheduler-demo
+
+spec:
+  schedule: "*/2 * * * *"
+
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: scheduler-demo
+            image: vikasjoshi11/k8s-scheduler-demo:latest
+            imagePullPolicy: Always
+
+          restartPolicy: Never
