@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: scheduler-demo
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: scheduler-demo
+
+  template:
+    metadata:
+      labels:
+        app: scheduler-demo
+
+    spec:
+      containers:
+      - name: scheduler-demo
+        image: vikasjoshi11/k8s-scheduler-demo:v1
+        ports:
+        - containerPort: 5000

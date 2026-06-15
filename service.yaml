@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: scheduler-service
+
+spec:
+  selector:
+    app: scheduler-demo
+
+  ports:
+  - port: 80
+    targetPort: 5000
+
+  type: NodePort
