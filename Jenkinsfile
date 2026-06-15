@@ -8,7 +8,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Vikas1147/Scheduler.git'
+                git branch: 'main',
+                url: 'https://github.com/Vikas1147/Scheduler.git'
             }
         }
 
@@ -18,6 +19,22 @@ pipeline {
             docker build -t %DOCKER_IMAGE%:%BUILD_NUMBER% .
             docker tag %DOCKER_IMAGE%:%BUILD_NUMBER% %DOCKER_IMAGE%:latest
             '''
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([
+                usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )
+            ]) {
+                    bat '''
+                echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                '''
+            }
             }
         }
 
@@ -45,6 +62,16 @@ pipeline {
             kubectl get jobs
             '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully'
+        }
+
+        failure {
+            echo 'Pipeline failed'
         }
     }
 }
